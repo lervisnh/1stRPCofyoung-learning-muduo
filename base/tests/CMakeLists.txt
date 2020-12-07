@@ -1,0 +1,3 @@
+add_executable(asynclogger_test AsyncLogging_test.cc)
+target_link_libraries(asynclogger_test Base)
+

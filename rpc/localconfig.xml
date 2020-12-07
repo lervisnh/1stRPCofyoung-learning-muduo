@@ -1,0 +1,7 @@
+<?xml version="1.0" ?> 
+<Server>
+  <LocalConfig>
+    <ip>127.0.0.1</ip>
+    <port>6000</port>
+  </LocalConfig>
+</Server>
