@@ -27,7 +27,7 @@ void EchoServer::onMessage(const TcpConnectionPtr& conn,
                            Buffer* buf,
                            TimeStamp time)
 {
-  std::string msg(buf->peek());
+  std::string msg(buf->retrieveAllAsString());
   LOG_INFO << conn->name() << " echo " << msg.size() << " bytes, "
            << "data received at " << time.toString();
   conn->send(msg);
