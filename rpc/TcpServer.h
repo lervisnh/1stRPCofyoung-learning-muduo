@@ -1,10 +1,9 @@
 
-#ifndef NET_TCPSERVER_H
-#define NET_TCPSERVER_H
+#ifndef TCPSERVER_H
+#define TCPSERVER_H
 
-#include "Atomic.h"
-// #include "muduo/base/Types.h"
-#include "TcpConnection.h"
+#include "base/Atomic.h"
+#include "net/TcpConnection.h"
 
 #include <map>
 #include <string>

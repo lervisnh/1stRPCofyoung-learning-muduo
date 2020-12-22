@@ -33,6 +33,8 @@ void delaySecond(int sec);
 //const struct sockaddr* sockaddr_cast(const struct sockaddr_in* addr)
 //const struct sockaddr_in* sockaddr_in_cast(const struct sockaddr* addr);
 
+bool isSelfConnect(int sockfd);
+
 }
 
 #endif

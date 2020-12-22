@@ -1,6 +1,8 @@
 #ifndef NET_BUFFER_H
 #define NET_BUFFER_H
 
+#include "Endian.h"
+
 #include <algorithm>
 #include <vector>
 #include <string>
@@ -87,6 +89,11 @@ public:
   	m_writerIndex = kCheapPrepend;
   }
 
+  std::string retrieveAllAsString()
+  {
+    return retrieveAsString(readableBytes());
+  }
+
   std::string retrieveAsString(size_t len)
   {
     assert(len <= readableBytes());
@@ -124,12 +131,26 @@ public:
     hasWritten(len);
   }
 
+  void prepend(const void* /*restrict*/ data, size_t len)
+  {
+    assert(len <= prependableBytes());
+    m_readerIndex -= len;
+    const char* d = static_cast<const char*>(data);
+    std::copy(d, d+len, begin()+m_readerIndex);
+  }
+
   ssize_t readFd(int fd, int* savedErrno);
 
   size_t internalCapacity() const
   {
     return m_buffer.capacity();
   }
+
+  ///
+  /// Peek int32_t from network endian
+  ///
+  /// Require: buf->readableBytes() >= sizeof(int32_t)
+  int32_t peekInt32() const;
 
 private:
   char* begin()

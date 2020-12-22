@@ -6,6 +6,7 @@ set(CMAKE_BUILD_TYPE "Debug")
 include_directories(${PROJECT_SOURCE_DIR})
 
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/build/bin)
+find_package(Protobuf REQUIRED)
 
 add_subdirectory(base)
 add_subdirectory(net)

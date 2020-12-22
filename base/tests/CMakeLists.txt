@@ -1,3 +1,6 @@
+
 add_executable(asynclogger_test AsyncLogging_test.cc)
 target_link_libraries(asynclogger_test Base)
 
+add_executable(thread_pool_test ThreadPool_test.cc)
+target_link_libraries(thread_pool_test Base)

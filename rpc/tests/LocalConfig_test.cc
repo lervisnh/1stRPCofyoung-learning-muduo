@@ -13,6 +13,8 @@ int main(int argc, char* argv[])
     LocalConfig::SetConfigFile(argv[1]);
     std::cout << "IP   = " << LocalConfig::GetInstance()->GetServerIp() << std::endl;
     std::cout << "Port = " << LocalConfig::GetInstance()->GetServerPort() << std::endl;
+    std::cout << "LogLevel = " << LocalConfig::GetInstance()->GetServerLogLevel() << std::endl;
+    std::cout << "workers = " << LocalConfig::GetInstance()->GetServerWorkers() << std::endl;
     
     return 0;
 }

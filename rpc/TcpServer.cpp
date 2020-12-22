@@ -1,14 +1,12 @@
 
 #include "TcpServer.h"
-
 #include "base/Logger.h"
-#include "Acceptor.h"
-#include "EventLoop.h"
-#include "EventLoopThreadPool.h"
-#include "SocketOps.h"
+#include "net/Acceptor.h"
+#include "net/EventLoop.h"
+#include "net/EventLoopThreadPool.h"
+#include "net/SocketOps.h"
 
 #include <stdio.h>  // snprintf
-
 
 TcpServer::TcpServer(EventLoop* loop,
                      const InetAddress& listenAddr,
@@ -19,8 +17,8 @@ TcpServer::TcpServer(EventLoop* loop,
     name_(nameArg),
     acceptor_(new Acceptor(loop, listenAddr, option == kReusePort)),
     threadPool_(new EventLoopThreadPool(loop, name_)),
-    connectionCallback_(NetCallBacks::defaultConnectionCallBack),
-    messageCallback_(NetCallBacks::defaultMessageCallBack),
+    connectionCallback_(),
+    messageCallback_(),
     nextConnId_(1)
 {
   acceptor_->setNewConnectionCallBack(

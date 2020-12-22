@@ -1,0 +1,18 @@
+<?xml version="1.0" ?> 
+<Server>
+  <LocalConfig>
+    <ip>127.0.0.1</ip>
+    <port>10001</port>
+    <loglevel>TRACE</loglevel> 
+    <!--  
+      默认为INFO
+      TRACE,
+      DEBUG,
+      INFO,
+      WARN,
+      ERROR,
+      FATAL,
+     -->
+    <workers>3</workers> <!--至少为1-->
+  </LocalConfig>
+</Server>

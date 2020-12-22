@@ -1,7 +1,7 @@
 #ifndef EXAMPLES_SIMPLE_ECHO_ECHO_H
 #define EXAMPLES_SIMPLE_ECHO_ECHO_H
 
-#include "net/TcpServer.h"
+#include "rpc/TcpServer.h"
 
 // RFC 862
 class EchoServer
@@ -14,6 +14,12 @@ class EchoServer
 
  private:
   TcpServer server_;
+  
+  // void onConnection(const TcpConnectionPtr& conn);
+
+  void onMessage(const TcpConnectionPtr& conn,
+                 Buffer* buf,
+                 TimeStamp time);
 };
 
 #endif  // MUDUO_EXAMPLES_SIMPLE_ECHO_ECHO_H

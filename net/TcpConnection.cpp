@@ -5,20 +5,6 @@
 #include "base/Logger.h"
 #include "SocketOps.h"
 
-using namespace NetCallBacks;
-void NetCallBacks::defaultConnectionCallBack(const TcpConnectionPtr& conn){
-    LOG_TRACE << " Connection " << conn->name()
-              << " ( " << conn->localAddress().toIpPort() << " -> "
-              << conn->peerAddress().toIpPort() << " ) "
-              << (conn->isConnected() ? "UP" : "DOWN");
-};
-void NetCallBacks::defaultMessageCallBack(const TcpConnectionPtr& conn, Buffer* buf, TimeStamp receiveTime){
-    LOG_TRACE << " Connection " << conn->name() << " : "
-              << " readable buf has " << buf->readableBytes() << "Bytes , "
-              << " writable buf has " << buf->writableBytes() << "Bytes , "
-              << " at " << receiveTime.toString();
-};
-
 
 TcpConnection::TcpConnection(EventLoop* loop,
                 const std::string& name,
@@ -59,12 +45,15 @@ TcpConnection::~TcpConnection()
 
 void TcpConnection::connectEstablished()
 {
-  LOG_TRACE << "TcpConnection::connectEstablished()";
   p_loop->assertInLoopThread();
   assert(m_state == kConnecting);
   setState(kConnected);
 
   p_channel->enableReading();
+  LOG_TRACE << " Connection " << name()
+            << " ( " << localAddress().toIpPort() << " -> "
+            << peerAddress().toIpPort() << " ) "
+            << (isConnected() ? "UP" : "DOWN");
 
   if(m_connectionCallBack) m_connectionCallBack(shared_from_this());
 

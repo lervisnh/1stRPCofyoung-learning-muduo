@@ -1,6 +1,7 @@
 #include "Buffer.h"
 #include "SocketOps.h"
-
+// #include "Endian.h"
+#include <string.h>
 /*#include <sys/uio.h>
 #include <iostream>*/
 
@@ -42,4 +43,13 @@ ssize_t Buffer::readFd(int fd, int* savedErrno)
   //   goto line_30;
   // }
   return n;
-}
+};
+
+
+int32_t Buffer::peekInt32() const
+{
+  assert(readableBytes() >= sizeof(int32_t));
+  int32_t be32 = 0;
+  ::memcpy(&be32, peek(), sizeof(be32));
+  return sockets::networkToHost32(be32);
+};
