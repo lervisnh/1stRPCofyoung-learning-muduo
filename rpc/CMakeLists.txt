@@ -18,6 +18,7 @@ set(rpc_SRCS
     RpcCoder.cpp
     rpc.pb.cc
     TcpServer.cpp
+    TcpClient.cpp
     ConnectionQueue.cpp
     LocalConfig.cpp
 )

@@ -8,14 +8,21 @@
 // using namespace muduo;
 // using namespace muduo::net;
 
-int main()
+int main(int argc, char* argv[])
 {
-  LOG_INFO << "pid = " << getpid();
-  Logger::setLogLevel(Logger::INFO);
-  EventLoop loop;
-  InetAddress listenAddr(20007);
-  EchoServer server(&loop, listenAddr);
-  server.start();
-  loop.loop();
+    if (argc > 1)
+    {
+        LOG_INFO << "pid = " << getpid();
+        Logger::setLogLevel(Logger::TRACE);
+        EventLoop loop;
+        InetAddress listenAddr(atoi(argv[1]));
+        EchoServer server(&loop, listenAddr);
+        server.start();
+        loop.loop();
+    }
+    else
+    {
+        printf("Usage: %s port\n", argv[0]);
+    }
 }
 

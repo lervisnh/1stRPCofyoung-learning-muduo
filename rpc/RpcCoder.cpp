@@ -31,7 +31,7 @@ bool RpcCoder::unpack(){
             LOG_DEBUG << "RPC message parse error";
             return false;
         }
-        
+        _buf->retrieve(kHeaderLen+len);
         return true;
     }
 

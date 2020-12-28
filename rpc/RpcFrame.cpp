@@ -16,13 +16,13 @@ static ConnectionQueue g_fromWorkersQueue;
 
 using namespace NetCallBacks;
 void NetCallBacks::defaultConnectionCallBack(const TcpConnectionPtr& conn)
-{  // TODO : move
+{
     // LOG_TRACE << "defaultConnectionCallBack enqueue finished. ";
 };
 void NetCallBacks::defaultMessageCallBack(const TcpConnectionPtr& conn, 
                                           Buffer* buf, 
                                           TimeStamp receiveTime)
-{  // TODO : move
+{
     LOG_TRACE << " Connection " << conn->name() << " : "
               << " readable buf has " << buf->readableBytes() << "Bytes , "
               << " writable buf has " << buf->writableBytes() << "Bytes ";

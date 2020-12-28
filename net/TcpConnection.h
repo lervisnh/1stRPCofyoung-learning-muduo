@@ -56,6 +56,7 @@ public:
   bool isConnected() const { return m_state == kConnected; }
   bool isDisConnected() const { return m_state == kDisConnected; }
   const char* stateToString() const;
+  void setTcpNoDelay(bool on);
 
 private:
   enum StateE { kDisConnected, kConnecting, kDisConnecting, kConnected, };
@@ -68,6 +69,7 @@ private:
   void sendInLoop(const void* data, size_t len);
   void shutdownInLoop();
   void forceCloseInLoop();
+  
 
   EventLoop* p_loop;
   std::string m_name;

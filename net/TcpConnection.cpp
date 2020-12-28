@@ -304,6 +304,11 @@ void TcpConnection::forceCloseInLoop()
   }
 }
 
+void TcpConnection::setTcpNoDelay(bool on)
+{
+  p_socket->setTcpNoDelay(on);
+}
+
 const char* TcpConnection::stateToString() const
 {
   switch (m_state)
