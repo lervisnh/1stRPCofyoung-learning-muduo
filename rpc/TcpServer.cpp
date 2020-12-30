@@ -8,6 +8,20 @@
 
 #include <stdio.h>  // snprintf
 
+using namespace NetCallBacks;
+void NetCallBacks::defaultConnectionCallBack(const TcpConnectionPtr& conn)
+{
+    LOG_TRACE << conn->localAddress().toIpPort() << " -> "
+            << conn->peerAddress().toIpPort() << " is "
+            << (conn->isConnected() ? "UP" : "DOWN");
+};
+void NetCallBacks::defaultMessageCallBack(const TcpConnectionPtr& conn, 
+                                          Buffer* buf, 
+                                          TimeStamp receiveTime)
+{
+    buf->retrieveAll();
+};
+
 TcpServer::TcpServer(EventLoop* loop,
                      const InetAddress& listenAddr,
                      const std::string& nameArg,
@@ -17,8 +31,8 @@ TcpServer::TcpServer(EventLoop* loop,
     name_(nameArg),
     acceptor_(new Acceptor(loop, listenAddr, option == kReusePort)),
     threadPool_(new EventLoopThreadPool(loop, name_)),
-    connectionCallback_(),
-    messageCallback_(),
+    connectionCallback_(NetCallBacks::defaultConnectionCallBack),
+    messageCallback_(NetCallBacks::defaultMessageCallBack),
     nextConnId_(1)
 {
   acceptor_->setNewConnectionCallBack(
@@ -56,7 +70,8 @@ void TcpServer::start()
 void TcpServer::newConnection(int sockfd, const InetAddress& peerAddr)
 {
   loop_->assertInLoopThread();
-  EventLoop* ioLoop = threadPool_->getNextLoop();
+  // TODO : move TcpConnection::connectEstablished
+  // EventLoop* ioLoop = threadPool_->getNextLoop();
   char buf[64];
   snprintf(buf, sizeof buf, "-%s#%d", ipPort_.c_str(), nextConnId_);
   ++nextConnId_;
@@ -68,7 +83,7 @@ void TcpServer::newConnection(int sockfd, const InetAddress& peerAddr)
   InetAddress localAddr(sockets::getLocalAddr(sockfd));
   // FIXME poll with zero timeout to double confirm the new connection
   // FIXME use make_shared if necessary
-  TcpConnectionPtr conn(new TcpConnection(ioLoop,
+  TcpConnectionPtr conn(new TcpConnection(loop_,
                                           connName,
                                           sockfd,
                                           localAddr,
@@ -79,7 +94,9 @@ void TcpServer::newConnection(int sockfd, const InetAddress& peerAddr)
   conn->setWriteCompleteCallback(writeCompleteCallback_);
   conn->setCloseCallBack(
       std::bind(&TcpServer::removeConnection, this, std::placeholders::_1)); // FIXME: unsafe
-  ioLoop->runInLoop(std::bind(&TcpConnection::connectEstablished, conn));
+  conn->connectEstablished();
+  // TODO : move TcpConnection::connectEstablished
+  // ioLoop->runInLoop(std::bind(&TcpConnection::connectEstablished, conn));
 }
 
 void TcpServer::removeConnection(const TcpConnectionPtr& conn)

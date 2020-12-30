@@ -15,6 +15,7 @@ int main(int argc, char* argv[])
         LOG_INFO << "pid = " << getpid();
         Logger::setLogLevel(Logger::TRACE);
         EventLoop loop;
+        LOG_DEBUG << "main loop = " << &loop;
         InetAddress listenAddr(atoi(argv[1]));
         EchoServer server(&loop, listenAddr);
         server.start();

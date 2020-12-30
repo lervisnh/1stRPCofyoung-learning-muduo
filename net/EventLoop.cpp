@@ -141,6 +141,13 @@ void EventLoop::wakeup()
   }
 }
 
+bool EventLoop::hasChannel(Channel* channel)
+{
+  assert(channel->ownerLoop() == this);
+  assertInLoopThread();
+  return m_poller->hasChannel(channel);
+}
+
 void EventLoop::handleRead() //handle wakeup Fd
 {
   LOG_TRACE << "EventLoop::handleRead() handle wakeup Fd";

@@ -50,12 +50,18 @@ void TcpConnection::connectEstablished()
   setState(kConnected);
 
   p_channel->enableReading();
-  LOG_TRACE << " Connection " << name()
+
+  if(m_connectionCallBack)
+  {
+    m_connectionCallBack(shared_from_this());
+  }
+  else
+  {
+    LOG_TRACE << " Connection " << name()
             << " ( " << localAddress().toIpPort() << " -> "
             << peerAddress().toIpPort() << " ) "
             << (isConnected() ? "UP" : "DOWN");
-
-  if(m_connectionCallBack) m_connectionCallBack(shared_from_this());
+  }
 
 }
 
@@ -252,7 +258,7 @@ void TcpConnection::handleError()
 
 void TcpConnection::handleClose()
 {
-  LOG_TRACE << "TcpConnection::handleClose()";
+  // LOG_TRACE << "TcpConnection::handleClose()";
   p_loop->assertInLoopThread();
   LOG_TRACE << "fd = " << p_channel->fd() << " state = " << stateToString();
   assert(m_state == kConnected || m_state == kDisConnecting);
@@ -261,7 +267,7 @@ void TcpConnection::handleClose()
   p_channel->disableAll();
 
   TcpConnectionPtr guardThis(shared_from_this());
-
+  m_connectionCallBack(guardThis);
   m_closeCallBack(guardThis); // to  Tcpserver ConnMap resource.
 }
 

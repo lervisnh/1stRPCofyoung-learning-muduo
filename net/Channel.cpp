@@ -43,14 +43,19 @@ Channel::Channel(EventLoop* loop, int fd)
     m_events(0),
     m_revents(0),
     m_index(-1),
-    m_addedToLoop(false)
+    m_addedToLoop(false),
+    m_eventHandling(false)
 {
 
 }
 
 Channel::~Channel()
 {
-
+  assert(!m_eventHandling);
+  assert(!m_addedToLoop);
+  if (p_loop->isInloopThread()) {
+    assert(!p_loop->hasChannel(this));
+  }
 }
 
 void Channel::update()
@@ -68,7 +73,8 @@ void Channel::remove()
 
 void Channel::handleEvent()
 {
-  LOG_TRACE << "Channel::handleEvent() ";
+  m_eventHandling = true;
+  LOG_TRACE << reventsToString();
 #ifndef _EPOLL_METHOD
   if(m_revents & EVENTNVAL)
   {
@@ -94,7 +100,7 @@ void Channel::handleEvent()
   if(m_revents & EVENTOUT){
     if(m_writeCallBack) m_writeCallBack();
   }
-
+  m_eventHandling = false;
 }
 
 std::string Channel::reventsToString() const

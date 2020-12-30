@@ -19,7 +19,7 @@ class EchoClient
   EchoClient(EventLoop* loop, const InetAddress& listenAddr, int size)
     : loop_(loop),
       client_(loop, listenAddr, "EchoClient"),
-      msg(size, 'H')
+      msg(size, '4')
   {
     client_.setConnectionCallback(
         std::bind(&EchoClient::onConnection, this, _1));

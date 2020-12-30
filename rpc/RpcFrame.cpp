@@ -14,22 +14,22 @@ static ConnectionQueue g_fromWorkersQueue;
 // TcpServer g_toWorkersIO(&listenLoop, listenAddr, "reactor_in_io");
 
 
-using namespace NetCallBacks;
-void NetCallBacks::defaultConnectionCallBack(const TcpConnectionPtr& conn)
-{
-    // LOG_TRACE << "defaultConnectionCallBack enqueue finished. ";
-};
-void NetCallBacks::defaultMessageCallBack(const TcpConnectionPtr& conn, 
-                                          Buffer* buf, 
-                                          TimeStamp receiveTime)
-{
-    LOG_TRACE << " Connection " << conn->name() << " : "
-              << " readable buf has " << buf->readableBytes() << "Bytes , "
-              << " writable buf has " << buf->writableBytes() << "Bytes ";
-            //   << " at " << receiveTime.toString();
-    g_toWorkersQueue.enqueue(conn->shared_from_this());
-};
-
+namespace RpcCallBacks {
+    void defaultConnectionCallBack(const TcpConnectionPtr& conn){
+        NetCallBacks::defaultConnectionCallBack(conn);
+        // LOG_TRACE << "defaultConnectionCallBack enqueue finished. ";
+    };
+    void defaultMessageCallBack(const TcpConnectionPtr& conn, 
+                                            Buffer* buf, 
+                                            TimeStamp receiveTime)
+    {
+        LOG_TRACE << " Connection " << conn->name() << " : "
+                << " readable buf has " << buf->readableBytes() << "Bytes , "
+                << " writable buf has " << buf->writableBytes() << "Bytes ";
+                //   << " at " << receiveTime.toString();
+        g_toWorkersQueue.enqueue(conn->shared_from_this());
+    };
+} // namespace RpcCallBacks
 
 // ###########################################################################
 
@@ -41,8 +41,8 @@ RpcFrame::RpcFrame(EventLoop* listenLoop, TcpServer* toWorkersIO) :
                         _toMeIO(toWorkersIO),
                         _threadNums(0)
 {
-    _toMeIO->setConnectionCallback(NetCallBacks::defaultConnectionCallBack);
-    _toMeIO->setMessageCallback(NetCallBacks::defaultMessageCallBack);
+    _toMeIO->setConnectionCallback(RpcCallBacks::defaultConnectionCallBack);
+    _toMeIO->setMessageCallback(RpcCallBacks::defaultMessageCallBack);
 };
 
 RpcFrame::~RpcFrame(){

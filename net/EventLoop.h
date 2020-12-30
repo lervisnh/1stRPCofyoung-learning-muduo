@@ -31,6 +31,7 @@ public:
 
 	void updateChannel(Channel* channel);
   	void removeChannel(Channel* channel);
+	bool hasChannel(Channel* channel);
 
 	TimerId runAt(const TimeStamp& time, const NetCallBacks::TimerCallBack& cb);
 	TimerId runAfter(double delay, const NetCallBacks::TimerCallBack& cb);

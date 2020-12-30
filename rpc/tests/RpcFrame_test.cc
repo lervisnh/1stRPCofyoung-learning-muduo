@@ -2,15 +2,22 @@
 #include "rpc/RpcFrame.h"
 #include "base/Logger.h"
 
-int main()
+int main(int argc, char* argv[])
 {
-    Logger::setLogLevel(Logger::TRACE);
+    if (argc > 1)
+    {
+        Logger::setLogLevel(Logger::TRACE);
 
-    EventLoop listenLoop;
-    InetAddress listenAddr(20007);
-    TcpServer IO(&listenLoop, listenAddr, "RpcFrame_test_IO");
-    RpcFrame rpc_service(&listenLoop, &IO);
-    rpc_service.setWorkers(1);
-    rpc_service.start();
-    // rpc_service.registerService();
+        EventLoop listenLoop;
+        InetAddress listenAddr(atoi(argv[1]));
+        TcpServer IO(&listenLoop, listenAddr, "RpcFrame_test_IO");
+        RpcFrame rpc_service(&listenLoop, &IO);
+        rpc_service.setWorkers(3);
+        rpc_service.start();
+        // rpc_service.registerService();
+    }
+    else
+    {
+        printf("Usage: %s port\n", argv[0]);
+    }
 }
