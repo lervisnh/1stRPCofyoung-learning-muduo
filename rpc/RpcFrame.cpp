@@ -9,11 +9,6 @@
 static ConnectionQueue g_toWorkersQueue;
 static ConnectionQueue g_fromWorkersQueue;
 
-// EventLoop listenLoop;
-// InetAddress listenAddr(20007);
-// TcpServer g_toWorkersIO(&listenLoop, listenAddr, "reactor_in_io");
-
-
 namespace RpcCallBacks {
     void defaultConnectionCallBack(const TcpConnectionPtr& conn){
         NetCallBacks::defaultConnectionCallBack(conn);
@@ -70,7 +65,9 @@ void RpcFrame::start(){
 
 void RpcFrame::registerService(google::protobuf::Service* s){
     const google::protobuf::ServiceDescriptor* desc = s->GetDescriptor();
-    _services[desc->full_name()] = s;
+    std::string srv_name (desc->full_name());
+    LOG_INFO << "Register Service : " << srv_name;
+    _services[srv_name] = s;
 }
 
 
@@ -130,7 +127,7 @@ void RpcFrame::workerLoop(){
 
         // 序列化应答
         RpcCoder outputCodec(conn->getOutputBuffer());
-        if (outputCodec.pack(rsp))
+        if (!(outputCodec.pack(rsp)))
         { // response pack fail
             // TODO : ADD
             LOG_ERROR << "Connection: " << conn->name() << ", response pack failed";

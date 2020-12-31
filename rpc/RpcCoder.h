@@ -12,7 +12,7 @@ typedef std::shared_ptr<RpcMessage> RpcMessagePtr;
 class RpcCoder
 {
 public:
-    const static int kHeaderLen = sizeof(int32_t);
+    const static int32_t kHeaderLen = sizeof(int32_t);
 
     explicit RpcCoder(Buffer*);
     ~RpcCoder();
@@ -25,6 +25,9 @@ public:
     RpcMessagePtr& getRpcMessage(){
         return _rpcMsg;
     };
+
+    static void unpack(Buffer*, RpcMessage&);
+    static void pack(Buffer*, RpcMessage&);
 
 private:
     /* data */
