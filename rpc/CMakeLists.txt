@@ -16,6 +16,7 @@ EXEC_PROGRAM(${PROTOBUF_PROTOC_EXECUTABLE}
 set(rpc_SRCS
     RpcFrame.cpp
     RpcCoder.cpp
+    RpcClient.cpp
     rpc.pb.cc
     TcpServer.cpp
     TcpClient.cpp

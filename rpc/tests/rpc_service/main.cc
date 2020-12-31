@@ -24,14 +24,11 @@ public:
 
 int main(int argc, char* argv[])
 {
-    if (argc < 2)
-    {
-      std::cout << "No XML File ! " << std::endl;
-      return 0;
-    }
-
-    RpcService s(argv[1]);
-    echo::EchoServiceImpl echoImpl;
-    s.registerService(&echoImpl);
-    s.start();
+    if (argc > 1) {
+        LOG_INFO << "pid = " << getpid();
+        RpcService s(argv[1]);
+        echo::EchoServiceImpl echoImpl;
+        s.registerService(&echoImpl);
+        s.start();
+    } else printf("Usage: %s XML_file \n", argv[0]);
 }

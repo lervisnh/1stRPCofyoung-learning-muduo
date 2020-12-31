@@ -4,3 +4,6 @@ EXEC_PROGRAM(${PROTOBUF_PROTOC_EXECUTABLE}
              -I${CMAKE_CURRENT_SOURCE_DIR})
 add_executable(rpc_service_test main.cc echo.pb.cc)
 target_link_libraries(rpc_service_test RPC)
+
+add_executable(rpc_client_test rpc_client.cpp echo.pb.cc)
+target_link_libraries(rpc_client_test RPC)
